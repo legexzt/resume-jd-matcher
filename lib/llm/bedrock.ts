@@ -29,7 +29,6 @@ export class BedrockProvider implements LLMProvider {
         ],
         inferenceConfig: {
           maxTokens: 4000,
-          temperature: 0.1, // Low temperature for more deterministic output
         },
       });
 
