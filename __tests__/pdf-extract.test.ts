@@ -1,18 +1,26 @@
 import { describe, it, expect, vi } from 'vitest';
 import { extractTextFromPdf } from '../lib/pdf/extract';
 
-// pdf-parse is a CJS module whose module.exports is the parse function itself.
-// We mock the entire module as a callable so that require('pdf-parse') returns
-// a function, matching the real package's shape.
+// pdf-parse v2 exposes the PDFParse class (not a callable function).
+// We mock the module with a PDFParse class whose getText() resolves or rejects
+// based on the buffer contents, matching the real package's shape.
 vi.mock('pdf-parse', () => {
-  const parseFn = vi.fn((buffer: Buffer) => {
-    if (buffer.toString() === 'corrupt') {
-      return Promise.reject(new Error('Corrupt PDF'));
+  class PDFParse {
+    private data: Buffer;
+    constructor(options: { data: Buffer }) {
+      this.data = options.data;
     }
-    return Promise.resolve({ text: 'Extracted PDF text' });
-  });
-  // Vitest resolves CJS interop: the default export IS the function
-  return { default: parseFn };
+    getText() {
+      if (this.data.toString() === 'corrupt') {
+        return Promise.reject(new Error('Corrupt PDF'));
+      }
+      if (this.data.toString() === 'empty-text') {
+        return Promise.resolve({ text: '   ' });
+      }
+      return Promise.resolve({ text: 'Extracted PDF text' });
+    }
+  }
+  return { PDFParse };
 });
 
 describe('pdf-extract', () => {
@@ -30,5 +38,10 @@ describe('pdf-extract', () => {
   it('should throw an error for a corrupt buffer', async () => {
     const buffer = Buffer.from('corrupt');
     await expect(extractTextFromPdf(buffer)).rejects.toThrow('Failed to extract text from PDF');
+  });
+
+  it('should throw an error when the PDF has no extractable text', async () => {
+    const buffer = Buffer.from('empty-text');
+    await expect(extractTextFromPdf(buffer)).rejects.toThrow('PDF contains no extractable text');
   });
 });
