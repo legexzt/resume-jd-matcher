@@ -27,7 +27,7 @@ export function ScoreDisplay({ score, breakdown }: ScoreDisplayProps) {
       <div className="flex flex-col items-center justify-center min-w-[150px]">
         <div className="text-sm font-medium text-slate-500 uppercase tracking-wider mb-2">Overall Match</div>
         <div className="flex items-baseline">
-          <span className={\`text-6xl font-bold \${getTextColor(score)}\`}>{score}</span>
+          <span className={`text-6xl font-bold ${getTextColor(score)}`}>{score}</span>
           <span className="text-2xl text-slate-400 ml-1">/ 100</span>
         </div>
       </div>
@@ -39,7 +39,7 @@ export function ScoreDisplay({ score, breakdown }: ScoreDisplayProps) {
             <span className="text-slate-500">{breakdown.skillsMatch}%</span>
           </div>
           <div className="w-full bg-slate-100 rounded-full h-2.5">
-            <div className={\`h-2.5 rounded-full \${getScoreColor(breakdown.skillsMatch)}\`} style={{ width: \`\${breakdown.skillsMatch}%\` }}></div>
+            <div className={`h-2.5 rounded-full ${getScoreColor(breakdown.skillsMatch)}`} style={{ width: `${breakdown.skillsMatch}%` }}></div>
           </div>
         </div>
         
@@ -49,7 +49,7 @@ export function ScoreDisplay({ score, breakdown }: ScoreDisplayProps) {
             <span className="text-slate-500">{breakdown.keywordCoverage}%</span>
           </div>
           <div className="w-full bg-slate-100 rounded-full h-2.5">
-            <div className={\`h-2.5 rounded-full \${getScoreColor(breakdown.keywordCoverage)}\`} style={{ width: \`\${breakdown.keywordCoverage}%\` }}></div>
+            <div className={`h-2.5 rounded-full ${getScoreColor(breakdown.keywordCoverage)}`} style={{ width: `${breakdown.keywordCoverage}%` }}></div>
           </div>
         </div>
         
@@ -59,7 +59,7 @@ export function ScoreDisplay({ score, breakdown }: ScoreDisplayProps) {
             <span className="text-slate-500">{breakdown.experienceRelevance}%</span>
           </div>
           <div className="w-full bg-slate-100 rounded-full h-2.5">
-            <div className={\`h-2.5 rounded-full \${getScoreColor(breakdown.experienceRelevance)}\`} style={{ width: \`\${breakdown.experienceRelevance}%\` }}></div>
+            <div className={`h-2.5 rounded-full ${getScoreColor(breakdown.experienceRelevance)}`} style={{ width: `${breakdown.experienceRelevance}%` }}></div>
           </div>
         </div>
       </div>
