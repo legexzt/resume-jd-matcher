@@ -1,6 +1,5 @@
-const pdfParse = require('pdf-parse');
-
 export async function extractTextFromPdf(buffer: Buffer): Promise<string> {
+  const pdfParse = require('pdf-parse');
   if (!buffer || buffer.length === 0) {
     throw new Error('PDF buffer is empty or invalid');
   }

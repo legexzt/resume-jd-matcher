@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { runAnalysis } from '../../../lib/analysis';
 import { ConfigurationError } from '../../../lib/llm/provider';
 
+export const dynamic = 'force-dynamic';
+
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 export async function POST(request: NextRequest) {
