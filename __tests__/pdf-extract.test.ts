@@ -1,26 +1,21 @@
 import { describe, it, expect, vi } from 'vitest';
 import { extractTextFromPdf } from '../lib/pdf/extract';
 
-// pdf-parse v2 exposes the PDFParse class (not a callable function).
-// We mock the module with a PDFParse class whose getText() resolves or rejects
-// based on the buffer contents, matching the real package's shape.
+// pdf-parse v1 is a CJS module whose module.exports is the parse function itself.
+// We mock the entire module as a callable so that require('pdf-parse') returns
+// a function, matching the real package's shape.
 vi.mock('pdf-parse', () => {
-  class PDFParse {
-    private data: Buffer;
-    constructor(options: { data: Buffer }) {
-      this.data = options.data;
+  const parseFn = vi.fn((buffer: Buffer) => {
+    if (buffer.toString() === 'corrupt') {
+      return Promise.reject(new Error('Corrupt PDF'));
     }
-    getText() {
-      if (this.data.toString() === 'corrupt') {
-        return Promise.reject(new Error('Corrupt PDF'));
-      }
-      if (this.data.toString() === 'empty-text') {
-        return Promise.resolve({ text: '   ' });
-      }
-      return Promise.resolve({ text: 'Extracted PDF text' });
+    if (buffer.toString() === 'empty-text') {
+      return Promise.resolve({ text: '   ' });
     }
-  }
-  return { PDFParse };
+    return Promise.resolve({ text: 'Extracted PDF text' });
+  });
+  // Vitest resolves CJS interop: the default export IS the function
+  return { default: parseFn };
 });
 
 describe('pdf-extract', () => {
